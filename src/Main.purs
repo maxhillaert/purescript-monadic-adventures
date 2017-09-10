@@ -1,7 +1,6 @@
 module Main where
 
 import Prelude
-import ReaderExample
 
 import Control.Monad.Eff 
 import Control.Monad.Eff.Exception
@@ -10,7 +9,9 @@ import Control.Monad.Eff
 import Data.Maybe
 import Data.Either
 import Node.ReadLine as RL
-import Game (runGameMonad, initialGameState, game, GameEnvironment, GameState, gameEnvironment)
+import Data.GameState
+import Data.GameEnvironment
+import Game (runGameMonad, game)
 import Data.Foldable (for_)
 import Control.Monad.RWS (RWSResult(..), runRWS)
 import Data.Newtype (wrap)

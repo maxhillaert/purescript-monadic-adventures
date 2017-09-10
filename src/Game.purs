@@ -17,88 +17,10 @@ import Data.Set (fromFoldable)
 import Data.Set as S
 import Data.String (joinWith)
 import Node.Stream (onFinish)
-
-type PlayerName = String
-
-newtype Coords = Coords 
-  {
-    x :: Int,
-    y :: Int
-  }
-
-derive instance coordsEq :: Eq Coords
-derive instance coordsOrd :: Ord Coords
-derive instance coordsGeneric :: Generic Coords
-instance showCoords :: Show Coords where
-  show = gShow
-
-
-coords :: Int -> Int -> Coords
-coords x y = Coords {x:x , y:y}
-
-
-data GameItem = Candle | Matches
-
-derive instance gameItemEq :: Eq GameItem
-derive instance gameItemOrd :: Ord GameItem 
-instance gameItem :: Show GameItem where
-  show :: GameItem -> String
-  show a = case a of 
-            Candle -> "candle"
-            Matches -> "matches"
-
-
-readItem :: String -> Maybe GameItem
-readItem "candle" = Just Candle
-readItem "matches" = Just Matches
-readItem _ = Nothing
-
-newtype GameEnvironment = GameEnvironment
-  { playerName    :: PlayerName
-  , debugMode     :: Boolean
-  }
-
-gameEnvironment :: PlayerName -> Boolean -> GameEnvironment
-gameEnvironment playerName debugMode = GameEnvironment
-  { playerName    : playerName
-  , debugMode     : debugMode
-  }
-
-newtype GameState = GameState
-  { items       :: M.Map Coords (S.Set GameItem)
-  , player      :: Coords
-  , inventory   :: S.Set GameItem
-  }
-
-
-instance showGameState :: Show GameState where
-  show (GameState a) = 
-    "GameState { "
-          <> "\n items: " <> show a.items 
-          <> "\n player: " <> show a.player 
-          <> "\n inventory: " <> show a.inventory 
-          <> "}"
-  
-
-emptyState :: GameState
-emptyState = GameState { items: M.empty, player: coords 0 0, inventory: S.empty }
-
-
-initialGameState :: GameState
-initialGameState = GameState
-  { items      : M.fromFoldable [ Tuple (coords 0 1) (S.singleton Candle)
-                                , Tuple (coords 0 0) (S.singleton Matches)
-                                ]
-  , player     : Coords { x: 0, y: 0 }
-  , inventory  : S.empty
-  }
-
-
-addInventory :: GameState -> GameItem -> GameState
-addInventory (GameState s) gi = 
-  let newInventory = S.insert gi s.inventory in
-  let newState = s { inventory = newInventory} in
-  GameState newState
+import Data.Coords
+import Data.GameEnvironment
+import Data.GameItem
+import Data.GameState
 
 type Log = Array String
 
